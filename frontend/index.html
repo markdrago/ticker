@@ -9,6 +9,10 @@
         var phrases = [];
         var socket;
 
+        var smoothness = 50;
+        var refresh_delay = 10 * smoothness;
+        var refresh_countdown = refresh_delay;
+
         function init_socket() {
             socket = io.connect('/');
             
@@ -22,7 +26,7 @@
                 phrases = data;
                 window.clearInterval();
                 refresh_phrases();
-                window.setInterval(refresh_phrases, 45000);
+                window.setInterval(countdown_to_refresh, 1000 / smoothness);
             });
 
             //a request for all of our phrases, return them
@@ -33,9 +37,26 @@
             //request our own bootstrapping
             socket.emit('bootstrap');
         }
-
+        
         function add_phrase(phrase) {
             phrases.push(phrase);
+            if (phrases.length == 1) {
+                refresh_phrases();
+            }
+        }
+
+        function countdown_to_refresh() {
+            refresh_countdown--;
+            if (refresh_countdown <= 0) {
+                refresh_phrases();
+                refresh_countdown = refresh_delay;
+            }
+            update_countdown_plunger();
+        }
+
+        function update_countdown_plunger() {
+            var pct = (refresh_countdown * 100) / refresh_delay;
+            $('#plunger').width(pct + '%');
         }
 
         function refresh_phrases() {
@@ -75,11 +96,14 @@
     </script>
 </head>
 <body>
-    <label for="phrase_input">Phrase: </label>
-    <input type="text" id="phrase_input" size="50" />
-    <label for="author_input">Author: </label>
-    <input type="text" id="author_input" size="20" />
-    <input type="button" id="add_phrase_button" value="Add Phrase" />
+    <div id="header">
+        <label for="phrase_input">Phrase: </label>
+        <input type="text" id="phrase_input" size="30" />
+        <label for="author_input">Author: </label>
+        <input type="text" id="author_input" size="15" />
+        <input type="button" id="add_phrase_button" value="Add Phrase" />
+    </div>
+    <div id="countdown"><div id="plunger"></div></div>
     <div id="phrase_box">
         <div id="phrase"></div>
         <div id="author"></div>

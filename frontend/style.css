@@ -1,0 +1,13 @@
+#phrase_box {
+    //background-color: lightgray;
+    padding: 40px;
+}
+
+#phrase {
+    font-size: 80px;
+}
+
+#author {
+    padding-top: 20px;
+    font-size: x-large;
+}

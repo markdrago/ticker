@@ -1,9 +1,11 @@
 <html>
 <head>
+    <link rel="stylesheet" href="style.css" />
     <script src="/src/lib/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
     $(document).ready(function() {
+        var current_phrase = -1;
         var phrases = [];
         var socket;
 
@@ -18,7 +20,9 @@
             //response to an earlier bootstrap call, set all phrases
             socket.on('set_all_phrases', function(data) {
                 phrases = data;
+                window.clearInterval();
                 refresh_phrases();
+                window.setInterval(refresh_phrases, 45000);
             });
 
             //a request for all of our phrases, return them
@@ -32,22 +36,32 @@
 
         function add_phrase(phrase) {
             phrases.push(phrase);
-            refresh_phrases();
         }
 
         function refresh_phrases() {
-            $('#phrases').empty();
-            $.each(phrases, function(i, elem) {
-                $('#phrases').append('<li>' + elem.phrase + '</li>');
-            });
+            if (phrases.length == 0) {
+                return;
+            }
+            
+            current_phrase++;
+            if (current_phrase >= phrases.length) {
+                current_phrase = 0;
+            }
+            
+            draw_phrase(phrases[current_phrase]);
+        }
+
+        function draw_phrase(phrase) {
+            $('#phrase').text(phrase.phrase);
+            $('#author').text(phrase.author);
         }
 
         function init_form() {
-            $('#add_phrase').click(function() {
-                var phrase = $('#phrase').val();
-                var author = $('#author').val();
-                $('#phrase').val('');
-                $('#author').val('');
+            $('#add_phrase_button').click(function() {
+                var phrase = $('#phrase_input').val();
+                var author = $('#author_input').val();
+                $('#phrase_input').val('');
+                $('#author_input').val('');
 
                 var phraseobj = { phrase: phrase, author: author };
                 add_phrase(phraseobj);
@@ -61,10 +75,15 @@
     </script>
 </head>
 <body>
-    <input type="text" id="phrase" size="75" />
-    <input type="text" id="author" size="25" />
-    <input type="button" id="add_phrase" value="Add Phrase" />
-    <ul id="phrases"></ul>
+    <label for="phrase_input">Phrase: </label>
+    <input type="text" id="phrase_input" size="50" />
+    <label for="author_input">Author: </label>
+    <input type="text" id="author_input" size="20" />
+    <input type="button" id="add_phrase_button" value="Add Phrase" />
+    <div id="phrase_box">
+        <div id="phrase"></div>
+        <div id="author"></div>
+    </div>
 </body>
 </html>
 

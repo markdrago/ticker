@@ -33,6 +33,10 @@
             socket.on('get_phrases', function() {
                 socket.emit('all_phrases', phrases);
             });
+
+            socket.on('num_clients', function(data) {
+                update_number_of_clients(data.count);
+            });
             
             //request our own bootstrapping
             socket.emit('bootstrap');
@@ -72,6 +76,10 @@
             draw_phrase(phrases[current_phrase]);
         }
 
+        function update_number_of_clients(count) {
+            $('#client_count').text(count);
+        }
+
         function draw_phrase(phrase) {
             $('#phrase').text(phrase.phrase);
             $('#author').text(phrase.author);
@@ -102,6 +110,8 @@
         <label for="author_input">Author: </label>
         <input type="text" id="author_input" size="15" />
         <input type="button" id="add_phrase_button" value="Add Phrase" />
+        <label for="client_count">Clients:</label>
+        <span id="client_count"></span>
     </div>
     <div id="countdown"><div id="plunger"></div></div>
     <div id="phrase_box">

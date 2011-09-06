@@ -8,6 +8,15 @@ var get_phrases_waiters = [];
 
 //socket operations
 io.sockets.on('connection', function (socket) {
+    //tell all sockets (including the new one) the new # of connected clients
+    io.sockets.emit('num_clients',
+                    { count: get_number_of_connected_sockets() });
+
+    //when this client disconnects, notify all others about the loss
+    socket.on('disconnect', function() {
+        io.sockets.emit('num_clients',
+                        { count: get_number_of_connected_sockets() - 1});
+    });
 
     //requesting bootstrapping
     socket.on('bootstrap', function(data) {
@@ -41,6 +50,18 @@ io.sockets.on('connection', function (socket) {
         socket.broadcast.emit('add_phrase', data);
     });
 });
+
+function get_number_of_connected_sockets() {
+    var num_connected = 0
+    for (var i in io.connected) {
+        if (io.connected.hasOwnProperty(i)) {
+            if (io.connected[i] === true) {
+                num_connected++;
+            }
+        }
+    }
+    return num_connected;
+}
 
 //handle regular URL requests
 app.listen(80);

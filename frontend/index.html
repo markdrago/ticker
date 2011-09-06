@@ -5,24 +5,28 @@
     <script>
     $(document).ready(function() {
         var phrases = [];
-        var socket = io.connect('/');
+        var socket;
 
         function init_socket() {
+            socket = io.connect('/');
+            
+            //simple phrase addition, add it to our list
             socket.on('add_phrase', function(data) {
                 add_phrase(data);
             });
 
+            //response to an earlier bootstrap call, set all phrases
             socket.on('set_all_phrases', function(data) {
-                alert('here');
                 phrases = data;
                 refresh_phrases();
             });
 
+            //a request for all of our phrases, return them
             socket.on('get_phrases', function() {
-                alert('getting phrases');
                 socket.emit('all_phrases', phrases);
             });
             
+            //request our own bootstrapping
             socket.emit('bootstrap');
         }
 

@@ -24,6 +24,7 @@
             //response to an earlier bootstrap call, set all phrases
             socket.on('set_all_phrases', function(data) {
                 phrases = data;
+                update_phrase_count();
                 window.clearInterval();
                 refresh_phrases();
                 window.setInterval(countdown_to_refresh, 1000 / smoothness);
@@ -37,7 +38,7 @@
             socket.on('num_clients', function(data) {
                 update_number_of_clients(data.count);
             });
-            
+
             //request our own bootstrapping
             socket.emit('bootstrap');
         }
@@ -47,15 +48,16 @@
             if (phrases.length == 1) {
                 refresh_phrases();
             }
+            update_phrase_count();
         }
 
         function countdown_to_refresh() {
             refresh_countdown--;
             if (refresh_countdown <= 0) {
                 refresh_phrases();
-                refresh_countdown = refresh_delay;
+            } else {
+                update_countdown_plunger();
             }
-            update_countdown_plunger();
         }
 
         function update_countdown_plunger() {
@@ -72,15 +74,25 @@
             if (current_phrase >= phrases.length) {
                 current_phrase = 0;
             }
-            
-            draw_phrase(phrases[current_phrase]);
+
+            draw_current_phrase();
+
+            refresh_countdown = refresh_delay;
+            update_countdown_plunger();
         }
 
         function update_number_of_clients(count) {
             $('#client_count').text(count);
         }
+        
+        function update_phrase_count() {
+            $('#phrase_count').text(phrases.length);
+        }
 
-        function draw_phrase(phrase) {
+        function draw_current_phrase() {
+            var phrase = phrases[current_phrase];
+            
+            $('#current_id').text(current_phrase + 1);
             $('#phrase').text(phrase.phrase);
             $('#author').text(phrase.author);
         }
@@ -96,6 +108,10 @@
                 add_phrase(phraseobj);
                 socket.emit('new_phrase', phraseobj);
             });
+            
+            $('#show_next').click(function() {
+                refresh_phrases();
+            });
         }
 
         init_socket();
@@ -110,7 +126,10 @@
         <label for="author_input">Author: </label>
         <input type="text" id="author_input" size="15" />
         <input type="button" id="add_phrase_button" value="Add Phrase" />
-        <label for="client_count">Clients:</label>
+        <input type="button" id="show_next" value="Next" />
+        <span id="sep"></span>
+        Phrase <span id="current_id"></span>/<span id="phrase_count"></span>
+        | <label for="client_count">Clients:</label>
         <span id="client_count"></span>
     </div>
     <div id="countdown"><div id="plunger"></div></div>

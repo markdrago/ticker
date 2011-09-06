@@ -1,0 +1,66 @@
+<html>
+<head>
+    <script src="/src/lib/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    $(document).ready(function() {
+        var phrases = [];
+        var socket = io.connect('/');
+
+        function init_socket() {
+            socket.on('add_phrase', function(data) {
+                add_phrase(data);
+            });
+
+            socket.on('set_all_phrases', function(data) {
+                alert('here');
+                phrases = data;
+                refresh_phrases();
+            });
+
+            socket.on('get_phrases', function() {
+                alert('getting phrases');
+                socket.emit('all_phrases', phrases);
+            });
+            
+            socket.emit('bootstrap');
+        }
+
+        function add_phrase(phrase) {
+            phrases.push(phrase);
+            refresh_phrases();
+        }
+
+        function refresh_phrases() {
+            $('#phrases').empty();
+            $.each(phrases, function(i, elem) {
+                $('#phrases').append('<li>' + elem.phrase + '</li>');
+            });
+        }
+
+        function init_form() {
+            $('#add_phrase').click(function() {
+                var phrase = $('#phrase').val();
+                var author = $('#author').val();
+                $('#phrase').val('');
+                $('#author').val('');
+
+                var phraseobj = { phrase: phrase, author: author };
+                add_phrase(phraseobj);
+                socket.emit('new_phrase', phraseobj);
+            });
+        }
+
+        init_socket();
+        init_form();
+    });
+    </script>
+</head>
+<body>
+    <input type="text" id="phrase" size="75" />
+    <input type="text" id="author" size="25" />
+    <input type="button" id="add_phrase" value="Add Phrase" />
+    <ul id="phrases"></ul>
+</body>
+</html>
+

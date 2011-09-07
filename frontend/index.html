@@ -100,6 +100,10 @@
                     return true;
                 }
 
+                if (phrase.created_time == undefined) {
+                    return false;
+                }
+
                 if (phrase.created_time < now - cutoff) {
                     num_removed++;
                     return false;

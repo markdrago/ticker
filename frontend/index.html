@@ -27,7 +27,6 @@
                 update_phrase_count();
                 window.clearInterval();
                 refresh_phrases();
-                window.setInterval(countdown_to_refresh, 1000 / smoothness);
             });
 
             //a request for all of our phrases, return them
@@ -41,6 +40,8 @@
 
             //request our own bootstrapping
             socket.emit('bootstrap');
+
+            window.setInterval(countdown_to_refresh, 1000 / smoothness);
         }
         
         function add_phrase(phrase) {
@@ -52,6 +53,10 @@
         }
 
         function countdown_to_refresh() {
+            if (phrases.length <= 1) {
+                return;
+            }
+        
             refresh_countdown--;
             if (refresh_countdown <= 0) {
                 refresh_phrases();
@@ -126,9 +131,9 @@
         <label for="author_input">Author: </label>
         <input type="text" id="author_input" size="15" />
         <input type="button" id="add_phrase_button" value="Add Phrase" />
-        <input type="button" id="show_next" value="Next" />
         <span id="sep"></span>
         Phrase <span id="current_id"></span>/<span id="phrase_count"></span>
+        <input type="button" id="show_next" value="Next" />
         | <label for="client_count">Clients:</label>
         <span id="client_count"></span>
     </div>

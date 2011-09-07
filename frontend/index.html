@@ -12,6 +12,8 @@
         var smoothness = 50;
         var refresh_delay = 10 * smoothness;
         var refresh_countdown = refresh_delay;
+        
+        var quote_lifetime = 60 * 60 * 24;
 
         function init_socket() {
             socket = io.connect('/');
@@ -24,8 +26,7 @@
             //response to an earlier bootstrap call, set all phrases
             socket.on('set_all_phrases', function(data) {
                 phrases = data;
-                update_phrase_count();
-                window.clearInterval();
+                retire_old_phrases();
                 refresh_phrases();
             });
 
@@ -77,6 +78,7 @@
             
             current_phrase++;
             if (current_phrase >= phrases.length) {
+                retire_old_phrases();
                 current_phrase = 0;
             }
 
@@ -84,6 +86,28 @@
 
             refresh_countdown = refresh_delay;
             update_countdown_plunger();
+        }
+
+        function retire_old_phrases() {
+            var cutoff = 1000 * quote_lifetime;
+
+            var dt = new Date();
+            var now = dt.getTime();
+            var num_removed = 0;
+            phrases = phrases.filter(function(phrase, index, list) {
+                //always leave one item in the list
+                if (phrases.length - num_removed == 1) {
+                    return true;
+                }
+
+                if (phrase.created_time < now - cutoff) {
+                    num_removed++;
+                    return false;
+                }
+                return true;
+            });
+            
+            update_phrase_count();
         }
 
         function update_number_of_clients(count) {
@@ -109,7 +133,12 @@
                 $('#phrase_input').val('');
                 $('#author_input').val('');
 
-                var phraseobj = { phrase: phrase, author: author };
+                var dt = new Date();
+                var now = dt.getTime();
+                var phraseobj = {
+                    phrase: phrase,
+                    author: author,
+                    created_time: now };
                 add_phrase(phraseobj);
                 socket.emit('new_phrase', phraseobj);
             });

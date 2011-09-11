@@ -16,7 +16,10 @@
         var quote_lifetime = 60 * 60 * 24;
 
         function init_socket() {
-            socket = io.connect('/');
+            var socket_options = {
+                'max reconnection attempts': Infinity
+            };
+            socket = io.connect('/', socket_options);
             
             //simple phrase addition, add it to our list
             socket.on('add_phrase', function(data) {

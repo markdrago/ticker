@@ -75,7 +75,7 @@ function serve_static_file(req, res) {
         url = '/index.html';
     }
 
-    fs.readFile(__dirname + '/../frontend' + url,
+    fs.readFile(__dirname + '/frontend' + url,
         function (err, data) {
             if (err) {
                 res.writeHead(500);

@@ -6,7 +6,10 @@
     <script>
     $(document).ready(function() {
         var current_phrase = -1;
-        var phrases = [];
+        var phrases = {
+            phrases: {},
+            ids: []
+        };
         var socket;
 
         var smoothness = 50;
@@ -28,6 +31,9 @@
 
             //response to an earlier bootstrap call, set all phrases
             socket.on('set_all_phrases', function(data) {
+                //avoid problems when we switched from [] to {} for phrases
+                if ($.isArray(data)) { return; }
+
                 phrases = data;
                 retire_old_phrases();
                 refresh_phrases();
@@ -48,16 +54,37 @@
             window.setInterval(countdown_to_refresh, 1000 / smoothness);
         }
         
-        function add_phrase(phrase) {
-            phrases.push(phrase);
-            if (phrases.length == 1) {
+        function add_phrase_local(phrase, author) {
+            var newid = Math.floor(Math.random() * 1000000000);
+            var dt = new Date();
+            var now = dt.getTime();
+
+            var phraseobj = {
+                ids: [ newid ]
+            };
+            phraseobj.phrases = {};
+            phraseobj.phrases[newid] = {
+                phrase: phrase,
+                author: author,
+                created_time: now
+            };
+
+            add_phrase(phraseobj);
+
+            socket.emit('new_phrase', phraseobj);
+        }
+        
+        function add_phrase(phraseobj) {
+            phrases.ids.push(phraseobj.ids[0]);
+            $.extend(phrases.phrases, phraseobj.phrases);
+            if (phrases.ids.length == 1) {
                 refresh_phrases();
             }
-            update_phrase_count();
+            update_phrase_count();        
         }
 
         function countdown_to_refresh() {
-            if (phrases.length <= 1) {
+            if (phrases.ids.length <= 1) {
                 return;
             }
         
@@ -75,12 +102,12 @@
         }
 
         function refresh_phrases() {
-            if (phrases.length == 0) {
+            if (phrases.ids.length == 0) {
                 return;
             }
             
             current_phrase++;
-            if (current_phrase >= phrases.length) {
+            if (current_phrase >= phrases.ids.length) {
                 retire_old_phrases();
                 current_phrase = 0;
             }
@@ -97,20 +124,21 @@
             var dt = new Date();
             var now = dt.getTime();
             var num_removed = 0;
-            phrases = phrases.filter(function(phrase, index, list) {
+            phrases.ids = phrases.ids.filter(function(phrase_id, index, list) {
                 //always leave one item in the list
-                if (phrases.length - num_removed == 1) {
+                if (phrases.ids.length - num_removed == 1) {
                     return true;
                 }
 
-                if (phrase.created_time == undefined) {
+                //remove old phrases
+                var phrase = phrases.phrases[phrase_id];
+                if (phrase.created_time == undefined ||
+                    phrase.created_time < now - cutoff) {
+                    num_removed++;
+                    delete phrases.phrases[phrase_id];
                     return false;
                 }
 
-                if (phrase.created_time < now - cutoff) {
-                    num_removed++;
-                    return false;
-                }
                 return true;
             });
             
@@ -122,11 +150,12 @@
         }
         
         function update_phrase_count() {
-            $('#phrase_count').text(phrases.length);
+            $('#phrase_count').text(phrases.ids.length);
         }
 
         function draw_current_phrase() {
-            var phrase = phrases[current_phrase];
+            var phraseid = phrases.ids[current_phrase];
+            var phrase = phrases.phrases[phraseid];
             
             $('#current_id').text(current_phrase + 1);
             $('#phrase').text(phrase.phrase);
@@ -140,14 +169,7 @@
                 $('#phrase_input').val('');
                 $('#author_input').val('');
 
-                var dt = new Date();
-                var now = dt.getTime();
-                var phraseobj = {
-                    phrase: phrase,
-                    author: author,
-                    created_time: now };
-                add_phrase(phraseobj);
-                socket.emit('new_phrase', phraseobj);
+                add_phrase_local(phrase, author);
             });
             
             $('#show_next').click(function() {

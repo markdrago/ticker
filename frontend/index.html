@@ -168,7 +168,7 @@
                 var author = $('#author_input').val();
                 $('#phrase_input').val('');
                 $('#author_input').val('');
-
+                hideForm();
                 add_phrase_local(phrase, author);
             });
             
@@ -179,26 +179,63 @@
 
         init_socket();
         init_form();
+
+
+        //Making the pretty ui work.
+        var $tabButton = $('#add_q_bttn'),
+            $headerForm = $('#header_add');
+
+        function hideForm(){
+            $headerForm.slideUp(function(){
+                $tabButton.fadeIn(100);
+
+            });
+        }
+
+        function showForm(){
+            $tabButton.fadeOut();
+            $headerForm.slideDown();
+        }
+
+        $tabButton.mouseenter(function(){ showForm(); });
+        $('#header').mouseleave(function(){ hideForm(); });
+
+        //toggle dark/light mode
+        $(document).keyup(function(e){
+
+            if (e.keyCode == '18')
+                $('body').toggleClass('dark');
+            
+        });
+
     });
     </script>
 </head>
-<body>
+<body class="dark">
     <div id="header">
-        <label for="phrase_input">Phrase: </label>
-        <input type="text" id="phrase_input" size="30" />
-        <label for="author_input">Author: </label>
-        <input type="text" id="author_input" size="15" />
-        <input type="button" id="add_phrase_button" value="Add Phrase" />
-        <span id="sep"></span>
-        Phrase <span id="current_id"></span>/<span id="phrase_count"></span>
-        <input type="button" id="show_next" value="Next" />
-        | <label for="client_count">Clients:</label>
-        <span id="client_count"></span>
+        <div id="header_add">
+            <label for="phrase_input" id="saywhat">say what? </label>
+            <textarea id="phrase_input"></textarea>
+            <div id="by_container">
+                <label for="author_input" id="by">by:</label>
+                <input type="text" id="author_input" size="25" />
+                <input type="button" id="add_phrase_button" />
+            </div>
+        </div>
+        <div id="add_q_bttn"></div>       
+        <div id="countdown"><div id="plunger"></div></div>
     </div>
-    <div id="countdown"><div id="plunger"></div></div>
     <div id="phrase_box">
         <div id="phrase"></div>
         <div id="author"></div>
+    </div>
+
+    <div id="phrase_counter">
+         <span id="current_id">0</span> of <span id="phrase_count">0</span>
+        <p><span id="client_count">0</span> clients running</p>
+    </div>
+    <div id="skipper">
+        <a href="#" id="show_next">Next &rarr;</a>
     </div>
 </body>
 </html>

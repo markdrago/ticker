@@ -1,9 +1,9 @@
 { "name" : "ticker"
 , "description" : "Share interesting phrases w/ coworkers"
 , "version" : "0.0.1"
-, "author" : "Mark Drago <jonathan.dahan@buglabs.net>"
+, "author" : "Mark Drago <markdrago@gmail.com>"
 , "dependencies" :
-  { "uglify-js": ""
+  { "uglify-js": "1.1.x"
   , "socket.io": "0.8.x"
   }
 , "engines": "node >= 0.5.0"

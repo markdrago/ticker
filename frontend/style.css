@@ -5,7 +5,7 @@ a { color:#0091CE; text-decoration: none; cursor:pointer; }
 
 #phrase_box { padding: 0; top: 50%; width: 100%; margin-top: -220px; position: absolute; }
     #phrase { font-size: 64px; line-height: 1.2em; font-family: "Georgia"; font-weight: normal; color: #535353; padding: 60px; text-align: center; }
-    #author { margin-top: 40px; font-size: 34px; font-weight: bold; text-align: center; color:#999; text-transform: capitalize; }
+    #author { margin-top: 40px; font-size: 34px; font-weight: bold; text-align: center; color:#999 }
 
 #header { position: fixed; top: 0; left: 0; width: 100%; background: #fff; padding: 0; margin: 0; font-size: small; color:#555; z-index: 10; }
 

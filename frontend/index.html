@@ -117,6 +117,22 @@
             refresh_countdown = refresh_delay;
             update_countdown_plunger();
         }
+        
+        function previous_phrase() { 
+            if (phrases.ids.length == 0) {
+                return;
+            }
+            
+            current_phrase--; 
+            if (current_phrase < 0) {
+                retire_old_phrases();
+                current_phrase = phrases.ids.length-1;
+            }
+        
+            draw_current_phrase(); 
+            refresh_countdown = refresh_delay;
+            update_countdown_plunger();
+        }
 
         function retire_old_phrases() {
             var cutoff = 1000 * quote_lifetime;
@@ -174,6 +190,10 @@
             
             $('#show_next').click(function() {
                 refresh_phrases();
+            });
+            
+            $('#show_previous').click(function() {
+                previous_phrase(); 
             });
         }
 
@@ -235,7 +255,8 @@
         <p><span id="client_count">0</span> clients running</p>
     </div>
     <div id="skipper">
-        <a href="#" id="show_next">Next &rarr;</a>
+        <a href="#" id="show_previous" class="control">&larr; Previous</a>
+        <a href="#" id="show_next" class="control">Next &rarr;</a>
     </div>
 </body>
 </html>

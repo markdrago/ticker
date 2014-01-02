@@ -141,8 +141,8 @@
             var now = dt.getTime();
             var num_removed = 0;
             phrases.ids = phrases.ids.filter(function(phrase_id, index, list) {
-                //always leave one item in the list
-                if (phrases.ids.length - num_removed == 1) {
+                var numLeft = phrases.ids.length - num_removed;
+                if (numLeft <= 10) {
                     return true;
                 }
 

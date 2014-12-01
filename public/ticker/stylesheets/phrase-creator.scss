@@ -1,0 +1,87 @@
+#header_add {
+  width: 600px;
+  padding: 0px;
+  height: 0px;
+  overflow: hidden;
+  margin: 0 auto;
+  position: relative;
+  display: block;
+  transition: all 0.2s ease-in;
+}
+
+#saywhat {
+  font-size: 22px;
+  color: #999;
+  display: block;
+}
+
+#inputs {
+  overflow-y: scroll;
+}
+
+#quote-input {
+  margin-bottom: 4px;
+}
+
+#author_input {
+  width: 22%;
+}
+
+#phrase_input {
+  width: 70%;
+}
+
+#colon {
+  width: 1%;
+}
+
+#remove-line {
+  width: 2%;
+  background: #b00;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  display: inline-block;
+  text-align: center;
+
+  &:hover {
+    background: #e00;
+  }
+
+}
+
+#insert-line {
+  cursor: pointer;
+  text-align: right;
+  padding: 20px;
+  font-size: 14px;
+
+  &:hover {
+    background: #ddd;
+  }
+}
+
+#add-container {
+  position: relative;
+  margin-left: -3px;
+}
+
+#add_phrase_button {
+  cursor: pointer;
+  border: none;
+  background: url(../img/bttn-add.png) 0 0 no-repeat;
+  width: 60px;
+  height: 55px;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 10px;
+
+  span {
+    display: none;
+  }
+
+  &:active {
+    top: 1px;
+  }
+}

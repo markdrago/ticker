@@ -1,0 +1,14 @@
+<div id="header_add">
+  <label for="inputs" id="saywhat">say what? </label>
+  <div id="inputs">
+    <div id="quote-input" ng-repeat="quote in quotes">
+      <input type="text" id="author_input" size="25" ng-model="quote.author" />
+      <span id="colon">:</span><input type="text" id="phrase_input" size="25" ng-model="quote.words" />
+      <div id="remove-line" ng-click="removeQuote($index)" ng-if="$index > 0">-</div>
+    </div>
+    <div id="insert-line" ng-click="addQuote()">+ Add line</div>
+  </div>
+  <div id="add-container">
+    <input type="button" id="add_phrase_button" ng-click="addPhrase()"/>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: arial, sans-serif;
+  overflow-x: hidden;
+}
+
+a {
+  color: #0091CE;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    color: #df3d82;
+    cursor: pointer;
+  }
+}
+
+label {
+  margin: 0 0 5px 0;
+}
+
+textarea, input[type=text] {
+  padding: 5px;
+  font-family: "Helvetica", "Arial";
+  font-size: 18px;
+  line-height: 26px;
+  border: none;
+  border-top: 1px solid #bbb;
+  border-left: 1px solid #bbb;
+  background: #f7f7f7;
+}

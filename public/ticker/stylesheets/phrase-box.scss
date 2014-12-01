@@ -1,0 +1,22 @@
+#phrase_box {
+  padding: 0;
+  top: 50%;
+  width: 100%;
+  margin-top: -220px;
+  position: absolute;
+}
+
+.quote {
+  font-size: 48px;
+  font-weight: normal;
+  display: block;
+  color: #999;
+  padding: 20px;
+  text-align: center;
+
+  .author {
+    font-weight: bold;
+    text-align: center;
+    color:#535353
+  }
+}

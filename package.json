@@ -2,7 +2,7 @@
   "name": "ticker",
   "description": "Share interesting phrases w/ coworkers",
   "version": "0.0.2",
-  "author": "Mark Drago <markdrago@gmail.com>",
+  "contributors": ["Ken Gorab <ken.gorab@gmail.com>", "Mark Drago <markdrago@gmail.com>"}],
   "dependencies": {
     "gulp": "^3.8.10",
     "gulp-sass": "^1.1.0",

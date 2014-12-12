@@ -24,7 +24,7 @@ io.sockets.on('connection', function (socket) {
         if (get_phrases_waiters.indexOf(socket.id) === -1) {
             get_phrases_waiters.push(socket.id);
         }
-        
+
         //broadcast to all other sockets a request for their phrases
         socket.broadcast.emit('get_phrases', '');
     });
@@ -37,7 +37,7 @@ io.sockets.on('connection', function (socket) {
             //get a single waiter from the list of waiters
             var waiterid = get_phrases_waiters.pop();
             var waiter = io.sockets.sockets[waiterid];
-            
+
             if (waiter !== undefined) {
                 //send the waiter the full set of phrases
                 waiter.emit('set_all_phrases', data);
@@ -75,7 +75,7 @@ function serve_static_file(req, res) {
         url = '/index.html';
     }
 
-    fs.readFile(__dirname + '/frontend' + url,
+    fs.readFile(__dirname + '/public' + url,
         function (err, data) {
             if (err) {
                 res.writeHead(500);
@@ -87,4 +87,3 @@ function serve_static_file(req, res) {
         }
     );
 }
-

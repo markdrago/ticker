@@ -7,7 +7,8 @@ define([
       replace: true,
       templateUrl: 'ticker/templates/countdown.html',
       scope: {
-        onFinish: '&onFinish'
+        onFinish: '&onFinish',
+        isPaused: '='
       },
       controller: 'countdownController'
     };
@@ -24,15 +25,17 @@ define([
       countdownService.setMaximum(countdownMax);
 
       var countdownToRefresh = function() {
-        countdownService.countDown();
+        if (!$scope.isPaused) {
+          countdownService.countDown();
 
-        var countdownValue = countdownService.getValue();
-        if (countdownValue <= 0) {
-          $scope.onFinish();
-          countdownService.restart();
+          var countdownValue = countdownService.getValue();
+          if (countdownValue <= 0) {
+            $scope.onFinish();
+            countdownService.restart();
+          }
+
+          $scope.percent = (countdownValue * 100) / countdownMax;
         }
-
-        $scope.percent = (countdownValue * 100) / countdownMax;
       };
 
       $interval(countdownToRefresh, 1000 / smoothness);

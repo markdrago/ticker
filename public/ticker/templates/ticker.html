@@ -2,7 +2,7 @@
   <div id="header" ng-class="{ 'header-expanded': isExpanded }" ng-mouseenter="isExpanded = true" ng-mouseleave="isExpanded = false">
     <div phrase-creator on-phrase-added="isExpanded = false"></div>
     <div id="add_container"><div id="add_q_bttn"></div></div>
-    <div countdown on-finish="showNext()"></div>
+    <div countdown on-finish="showNext()" is-paused="!getCurrentPhrase()"></div>
   </div>
 
   <div phrase-box phrase="getCurrentPhrase()"></div>

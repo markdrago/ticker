@@ -21,11 +21,11 @@ define([
     var addPhrase = function(phrase) {
       phrases.push(phrase);
       if (phrases.length === 1) {
-        refreshPhrases();
+        nextPhrase();
       }
     };
 
-    var refreshPhrases = function() {
+    var nextPhrase = function() {
       if (phrases.length > 0) {
         currentPhraseIndex++;
 
@@ -33,8 +33,6 @@ define([
           retireOldPhrases();
           currentPhraseIndex = 0;
         }
-
-        return phrases[currentPhraseIndex];
       }
     };
 
@@ -46,8 +44,6 @@ define([
           retireOldPhrases();
           currentPhraseIndex = phrases.length - 1;
         }
-
-        return phrases[currentPhraseIndex];
       }
     };
 
@@ -90,7 +86,7 @@ define([
       getCurrentPhrase: getCurrentPhrase,
       setPhrases: setPhrases,
       addPhrase: addPhrase,
-      refreshPhrases: refreshPhrases,
+      nextPhrase: nextPhrase,
       previousPhrase: previousPhrase,
       retireOldPhrases: retireOldPhrases
     };

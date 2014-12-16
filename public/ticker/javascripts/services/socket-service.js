@@ -21,7 +21,7 @@ define([
         if (_.isArray(data)) {
           phraseService.setPhrases(data);
           phraseService.retireOldPhrases();
-          phraseService.refreshPhrases();
+          phraseService.nextPhrase();
         }
       });
 

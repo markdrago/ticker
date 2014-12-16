@@ -12,15 +12,15 @@ define([
     function($scope, $interval, $document, phraseService, socketService, clientService, countdownService) {
       socketService.initialize();
 
-      $scope.currentPhrase = phraseService.getCurrentPhrase();
+      $scope.getCurrentPhrase = phraseService.getCurrentPhrase;
 
       $scope.showNext = function() {
-        $scope.currentPhrase = phraseService.refreshPhrases();
+        phraseService.nextPhrase();
         countdownService.restart();
       };
 
       $scope.showPrevious = function() {
-        $scope.currentPhrase = phraseService.previousPhrase();
+        phraseService.previousPhrase();
         countdownService.restart();
       };
 
